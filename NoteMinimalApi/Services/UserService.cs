@@ -77,4 +77,10 @@ public class UserService
         return await _context.Users.Where(u => !u.IsDeleted && u.UserId == id).AnyAsync();
     }
 
+    public async Task<bool> IsAvailableForCreate(string login)
+    {
+        return !await _context.Users.Where(u=>!u.IsDeleted)
+            .Where(u => u.Login == login).AnyAsync();
+    }
+
 }

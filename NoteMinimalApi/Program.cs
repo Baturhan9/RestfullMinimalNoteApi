@@ -60,8 +60,16 @@ noteApi.MapGet("/{id:int}", async (int id, NoteService service)=>
 
 noteApi.MapPost("/", async (CreateNoteCommand input, NoteService service)=>
 {
-    var id = await service.CreateNoteAsync(input);
-    return Results.Created("note", id);
+    if(await service.IsAvailableForCreate(input.UserId))
+    {
+        var id = await service.CreateNoteAsync(input);
+        return Results.Created("note", id);
+    }
+
+    return Results.ValidationProblem(new Dictionary<string, string[]>
+    {
+        {"userId", new[] {$"user with {input.UserId} id not exist"}}
+    });
 });
 
 noteApi.MapPut("/", async (UpdateNoteCommand input, NoteService service) =>
@@ -99,8 +107,15 @@ userApi.MapGet("/{id:int}", async (int id, UserService service)=>
 
 userApi.MapPost("/", async (CreateUserCommand input, UserService service)=>
 {
-    var id = await service.CreateUserAsync(input);
-    return Results.Created($"user", id);
+    if(await service.IsAvailableForCreate(input.Login))
+    {
+        var id = await service.CreateUserAsync(input);
+        return Results.Created($"user", id);
+    }
+    return Results.ValidationProblem(new Dictionary<string, string[]>
+    {
+        {"login", new[]{$"user with '{input.Login}' login already exist"}}
+    });
 });
 
 userApi.MapPut("/", async (UpdateUserCommand input, UserService service)=>

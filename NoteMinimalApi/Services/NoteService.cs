@@ -76,4 +76,9 @@ public class NoteService
         return await _context.Notes.Where(x => !x.IsDeleted && x.NoteId == id).AnyAsync();
     }
 
+    public async Task<bool> IsAvailableForCreate(int userId)
+    {
+        return await _context.Users.Where(u => !u.IsDeleted && u.UserId == userId).AnyAsync();
+    }
+
 }
