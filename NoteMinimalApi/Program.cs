@@ -40,7 +40,7 @@ app.UseExceptionHandler();
 app.UseStatusCodePages();
 
 
-var api = app.MapGroup("/api/v1");
+var api = app.MapGroup("/api/v1").WithParameterValidation();
 var noteApi = api.MapGroup("/note").WithTags("Note");
 var userApi = api.MapGroup("/user").WithTags("User");
 
