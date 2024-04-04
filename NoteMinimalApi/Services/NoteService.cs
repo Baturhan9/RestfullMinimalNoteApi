@@ -71,4 +71,9 @@ public class NoteService
         await _context.SaveChangesAsync();
     }
 
+    public async Task<bool> IsAvailableForUpdate(int id)
+    {
+        return await _context.Notes.Where(x => !x.IsDeleted && x.NoteId == id).AnyAsync();
+    }
+
 }
