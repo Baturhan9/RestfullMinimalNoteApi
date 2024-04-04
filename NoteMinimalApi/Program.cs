@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NoteMinimalApi.EndpointFilters;
 using NoteMinimalApi.Models;
 using NoteMinimalApi.Services;
 using NoteMinimalApi.ViewModels.NoteViewModel;
@@ -36,7 +37,7 @@ if(app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseExceptionHandler();
-
+app.UseStatusCodePages();
 
 
 var api = app.MapGroup("/api/v1");
@@ -54,7 +55,8 @@ noteApi.MapGet("/{id:int}", async (int id, NoteService service)=>
     return note is null 
     ? Results.Problem(statusCode:404)
     : Results.Ok(note);
-});
+})
+.AddEndpointFilter<IdValidationFilter>();
 
 noteApi.MapPost("/", async (CreateNoteCommand input, NoteService service)=>
 {
@@ -76,7 +78,8 @@ noteApi.MapDelete("/{id:int}", async (int id, NoteService service)=>
 {
     await service.DeleteNoteASync(id);
     return Results.NoContent();
-});
+})
+.AddEndpointFilter<IdValidationFilter>();
 
 //----------------------------------------------------------------
 
@@ -91,7 +94,8 @@ userApi.MapGet("/{id:int}", async (int id, UserService service)=>
     return user is null 
     ? Results.Problem(statusCode: 404)
     : Results.Ok(user);
-});
+})
+.AddEndpointFilter<IdValidationFilter>();
 
 userApi.MapPost("/", async (CreateUserCommand input, UserService service)=>
 {
@@ -109,10 +113,11 @@ userApi.MapPut("/", async (UpdateUserCommand input, UserService service)=>
     return Results.Problem(statusCode:404);
 });
 
-userApi.MapDelete("/", async (int id, UserService service)=>
+userApi.MapDelete("/{id:int}", async (int id, UserService service)=>
 {
     await service.DeleteUserAsync(id);
     return Results.NoContent();
-});
+})
+.AddEndpointFilter<IdValidationFilter>();
 
 app.Run();
