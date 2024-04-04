@@ -54,6 +54,7 @@ public class NoteService
 
         note.Title = cmd.Title;
         note.Description = cmd.Description;
+        note.DateModified = DateOnly.FromDateTime(DateTime.Today);
 
         await _context.SaveChangesAsync();
     }
