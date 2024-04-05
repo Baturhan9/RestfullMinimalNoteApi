@@ -51,6 +51,7 @@ public class NoteService
             throw new Exception("Unable to find the note");
         if(note.IsDeleted)
             throw new Exception("Note deleted");
+        
 
         note.Title = cmd.Title;
         note.Description = cmd.Description;
