@@ -88,8 +88,12 @@ public static class NoteHandler
         [ProducesResponseType(typeof(HttpNotFoundProblem), 404)]
         async (int id, NoteService service)=>
         {
-            await service.DeleteNoteASync(id);
-            return Results.NoContent();
+            if(await service.IsAvailableForUpdate(id))
+            {
+                await service.DeleteNoteAsync(id);
+                return Results.NoContent();
+            }
+            return Results.NotFound();
         })
         .AddEndpointFilter<IdValidationFilter>();
 

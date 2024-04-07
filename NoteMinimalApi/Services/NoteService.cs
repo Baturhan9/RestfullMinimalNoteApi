@@ -61,15 +61,14 @@ public class NoteService
     }
 
 
-    public async Task DeleteNoteASync(int id)
+    public async Task DeleteNoteAsync(int id)
     {
         var note = await _context.Notes.FindAsync(id);
-        if(note is null)
-            throw new Exception("Unable to find the note");
-
-        note.IsDeleted = true;
-
-        await _context.SaveChangesAsync();
+        if(note is not null)
+        {
+            note.IsDeleted = true;
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task<bool> IsAvailableForUpdate(int id)

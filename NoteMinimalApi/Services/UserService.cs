@@ -65,11 +65,11 @@ public class UserService
     public async Task DeleteUserAsync(int id)
     {
         var user = await _context.Users.FindAsync(id);
-        if(user is null)
-            throw new Exception("Unable to find the user");
-        
-        user.IsDeleted = true;
-        await _context.SaveChangesAsync();
+        if(user is not null)
+        {
+            user.IsDeleted = true;
+            await _context.SaveChangesAsync();
+        } 
     }
 
     public async Task<bool> IsAvailableForUpdate(int id)

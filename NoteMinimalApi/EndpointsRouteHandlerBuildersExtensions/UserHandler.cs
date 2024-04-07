@@ -83,8 +83,12 @@ public static class UserHandler
         [ProducesResponseType(typeof(HttpNotFoundProblem), 404)]
         async (int id, UserService service)=>
         {
-            await service.DeleteUserAsync(id);
-            return Results.NoContent();
+            if(await service.IsAvailableForUpdate(id))
+            {
+                await service.DeleteUserAsync(id);
+                return Results.NoContent();
+            }
+            return Results.NotFound();
         })
         .AddEndpointFilter<IdValidationFilter>();
 
