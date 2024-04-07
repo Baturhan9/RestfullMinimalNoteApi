@@ -33,7 +33,9 @@ public class NoteService
 
     public async Task<NoteDetailViewModel?> GetNoteDetailAsync(int id)
     {
-        return await _context.Notes.Where(s => !s.IsDeleted && s.NoteId == id)
+        if(CacheRequestService.NotesRequest.ContainsKey(id))
+            return CacheRequestService.NotesRequest[id];
+        var note = await _context.Notes.Where(s => !s.IsDeleted && s.NoteId == id)
             .Select(n => new NoteDetailViewModel
             {
                 NoteId = n.NoteId,
@@ -42,6 +44,8 @@ public class NoteService
                 DateCreated = n.DateCreated,
                 DateModified = n.DateModified
             }).SingleOrDefaultAsync();
+        CacheRequestService.NotesRequest.Add(note.NoteId,note);
+        return note;
     }
 
     public async Task UpdateNoteAsync(UpdateNoteCommand cmd)
@@ -58,6 +62,7 @@ public class NoteService
         note.DateModified = DateOnly.FromDateTime(DateTime.Today);
 
         await _context.SaveChangesAsync();
+        CacheRequestService.NotesRequest.Remove(note.NoteId);
     }
 
 
@@ -69,6 +74,7 @@ public class NoteService
             note.IsDeleted = true;
             await _context.SaveChangesAsync();
         }
+        CacheRequestService.NotesRequest.Remove(id);
     }
 
     public async Task<bool> IsAvailableForUpdate(int id)
