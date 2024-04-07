@@ -1,12 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NoteMinimalApi.EndpointFilters;
 using NoteMinimalApi.EndpointsRouteHandlerBuildersExtensions;
 using NoteMinimalApi.Models;
-using NoteMinimalApi.Services;
 using NoteMinimalApi.ServicesExtensions;
-using NoteMinimalApi.ValidationProblems;
-using NoteMinimalApi.ViewModels.UserViewModel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +33,7 @@ app.UseStatusCodePages();
 
 
 app.MapNoteEndpoints();
+
 app.MapUserEndpoints();
 
 

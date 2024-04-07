@@ -14,7 +14,8 @@ public static class NoteHandler
         var noteApi = endpoint.MapGroup("/api/v1/note")
             .WithParameterValidation()
             .WithOpenApi()
-            .WithTags("Note");
+            .WithTags("Note")
+            .AddEndpointFilter<LoggerFilter>();
 
         noteApi.MapGet("/", 
         [EndpointName("Get list of notes")]
