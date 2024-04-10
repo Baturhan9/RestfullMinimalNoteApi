@@ -31,6 +31,15 @@ public class NoteService
         }).ToListAsync();
     }
 
+    public async Task<List<NoteSummaryViewModel>?> GetUsersNotesAsync(int userId)
+    {
+        return await _context.Notes.Where(n => !n.IsDeleted && n.UserId == userId).Select(n => new NoteSummaryViewModel
+        {
+            NoteId = n.NoteId,
+            Title = n.Title,
+            DateModified = n.DateModified ?? n.DateCreated
+        }).ToListAsync() ?? null;
+    }
     public async Task<NoteDetailViewModel?> GetNoteDetailAsync(int id)
     {
         if(CacheRequestService.NotesRequest.ContainsKey(id))
@@ -44,6 +53,8 @@ public class NoteService
                 DateCreated = n.DateCreated,
                 DateModified = n.DateModified
             }).SingleOrDefaultAsync();
+        if(note is null)
+            return null;
         CacheRequestService.NotesRequest.Add(note.NoteId,note);
         return note;
     }
@@ -73,8 +84,8 @@ public class NoteService
         {
             note.IsDeleted = true;
             await _context.SaveChangesAsync();
+            CacheRequestService.NotesRequest.Remove(id);
         }
-        CacheRequestService.NotesRequest.Remove(id);
     }
 
     public async Task<bool> IsAvailableForUpdate(int id)
