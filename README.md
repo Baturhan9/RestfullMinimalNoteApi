@@ -7,3 +7,4 @@ This is minimal note api written by Asp.Net.Core
 - OpenApi
 - EntityFrameworkCore
 - Swashbuckle
+- Fluent Assertions
