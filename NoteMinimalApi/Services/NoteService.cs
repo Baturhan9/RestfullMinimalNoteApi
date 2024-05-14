@@ -33,7 +33,7 @@ public class NoteService
 
     public async Task<List<NoteSummaryViewModel>?> GetUsersNotesAsync(int userId)
     {
-        return null;
+
         return await _context.Notes.Where(n => !n.IsDeleted && n.UserId == userId).Select(n => new NoteSummaryViewModel
         {
             NoteId = n.NoteId,
