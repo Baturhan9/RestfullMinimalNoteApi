@@ -288,7 +288,7 @@ public class NoteServiceTest
         noteFromCache.Should().Be(noteFromService);
     }
     [Fact]
-    public void DeleteCache_DeletingNote_ReturnNull()
+    public void DeleteCache_DeletingNote_CacheIsNull()
     {
         //arrange
         var service = new NoteService(_db) ;
